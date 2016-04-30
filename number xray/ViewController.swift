@@ -12,8 +12,7 @@ enum RowKind: Int {
     case Decimal = 0,
          Binary,
          Hex,
-         isEven,
-         isOdd,
+         Parity,
          isPrime,
          PrimeFactors
 }
@@ -23,8 +22,8 @@ class ViewController: UIViewController, UITableViewDelegate {
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var numberTable: UITableView!
     
-    let rowCount = 7
-    let numberCount = 20
+    let rowCount = 6
+    let numberCount = 30
     
     @IBAction func siderValueChanged(sender: AnyObject) {
         numberTable.reloadData()
@@ -43,12 +42,12 @@ class ViewController: UIViewController, UITableViewDelegate {
         return [1,2,3,4,5]
     }
     
-    func binaryFormat(candidate:Int) -> String {
-        return "10110111"
-    }
-    
-    func hexFormat(candidate:Int) -> String {
-        return "0x12aF0"
+    func parity(candidate:Int) -> String {
+        var result = "Odd"
+        if (candidate % 2) == 0 {
+            result = "Even"
+        }
+        return result
     }
     
     func convertBase(base10Number: Int, newBase: Int) -> String {
@@ -88,31 +87,28 @@ class ViewController: UIViewController, UITableViewDelegate {
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "cell")
         
         var result:String = ""
-        let sliderNUmber = Int(slider.value * Float(numberCount))
+        let sliderNumber = Int(slider.value * Float(numberCount))
         
         if let someRow = RowKind(rawValue: indexPath.row) {
             
             switch someRow {
             case .Decimal:
-                result = "Decimal: \(sliderNUmber)"
+                result = "Decimal: \(sliderNumber)"
                 
             case .Binary:
-                result = "Binary: \(binaryFormat(sliderNUmber))"
+                result = "Binary: \(convertBase(sliderNumber, newBase: 2))"
                 
             case .Hex:
-                result = "Hex: \(hexFormat(sliderNUmber))"
+                result = "Hex: \(convertBase(sliderNumber, newBase: 16))"
                 
-            case .isEven:
-                result = "Is Even? \((sliderNUmber % 2) == 0)"
-                
-            case .isOdd:
-                result = "Is Odd? \((sliderNUmber % 2) != 0)"
+            case .Parity:
+                result = "Parity \(parity(sliderNumber))"
                 
             case .isPrime:
-                result = "Is Prime? \(isPrime(sliderNUmber))"
+                result = "Is Prime? \(isPrime(sliderNumber))"
                 
             case .PrimeFactors:
-                result = "Is Prime Factors: \(PrimeFactors(sliderNUmber))"
+                result = "Is Prime Factors: \(PrimeFactors(sliderNumber))"
                 
             }
             
