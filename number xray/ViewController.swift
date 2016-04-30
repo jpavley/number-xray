@@ -51,6 +51,38 @@ class ViewController: UIViewController, UITableViewDelegate {
         return "0x12aF0"
     }
     
+    func convertBase(base10Number: Int, newBase: Int) -> String {
+        
+        // NOTE
+        // - Converts the base of a Int from decimal to any base between 2 and 16.
+        // - Returns a string representation of the converted number
+        // - Returns empty string on inout error
+        
+        var result = ""
+        var number = base10Number
+        var remainer = 0
+        let digits = ["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"]
+        var remainders:[Int] = []
+        
+        if newBase < 2 || newBase > 16 {
+            result = ""
+            return result
+        }
+        
+        while number > 0 {
+            remainer = number % newBase
+            remainders.append(remainer)
+            number = number / newBase
+        }
+        
+        for item in remainders.reverse() {
+            result = result + String(digits[item])
+        }
+        
+        
+        return result
+    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "cell")
