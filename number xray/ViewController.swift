@@ -14,7 +14,10 @@ enum RowKind: Int {
          Hex,
          Parity,
          isPrime,
-         PrimeFactors
+         PrimeFactors,
+         SquareRoot,
+         CubeRoot,
+         Factorial
 }
 
 class ViewController: UIViewController, UITableViewDelegate {
@@ -22,7 +25,7 @@ class ViewController: UIViewController, UITableViewDelegate {
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var numberTable: UITableView!
     
-    let rowCount = 6
+    let rowCount = 9
     let numberCount = 30
     
     @IBAction func siderValueChanged(sender: AnyObject) {
@@ -35,11 +38,40 @@ class ViewController: UIViewController, UITableViewDelegate {
     }
     
     func isPrime(candidate:Int) -> Bool {
-        return false
+        
+        var result = true
+        
+        if candidate == 0 || candidate == 1 {
+            result = false
+        } else {
+            for i in 2..<candidate {
+                if (candidate % i) == 0 {
+                    result = false
+                }
+            }
+        }
+        
+        return result
     }
     
     func PrimeFactors(candidate:Int) -> [Int] {
-        return [1,2,3,4,5]
+        var result:[Int] = []
+        
+        if candidate == 0 || candidate == 1 {
+            // Do nothing because a prime must be greater than 1
+        } else if isPrime(candidate) {
+            result.append(1)
+            result.append(candidate)
+        } else {
+            for i in 2..<candidate {
+                if (candidate % i) == 0 {
+                    result.append(i)
+                }
+            }
+            result.append(candidate)
+        }
+        
+        return result
     }
     
     func parity(candidate:Int) -> String {
@@ -78,8 +110,16 @@ class ViewController: UIViewController, UITableViewDelegate {
             result = result + String(digits[item])
         }
         
-        
         return result
+    }
+    
+    func calcFactorial(candidate: Double) -> Double {
+        
+        if candidate <= 1 {
+            return 1
+        }
+        
+        return candidate * calcFactorial(candidate - 1)
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -108,7 +148,16 @@ class ViewController: UIViewController, UITableViewDelegate {
                 result = "Is Prime? \(isPrime(sliderNumber))"
                 
             case .PrimeFactors:
-                result = "Is Prime Factors: \(PrimeFactors(sliderNumber))"
+                result = "Prime Factors: \(PrimeFactors(sliderNumber))"
+                
+            case .SquareRoot:
+                result = "Square Root: \(sqrt(Double(sliderNumber)))"
+                
+            case .CubeRoot:
+                result = "Cube Root: \(pow(Double(sliderNumber), 1.0/3.0))"
+                
+            case .Factorial:
+                result = "Factorial: \(calcFactorial(Double(sliderNumber)))"
                 
             }
             
